@@ -2,22 +2,11 @@
 using Microsoft.AspNetCore.Http;
 using Newtonsoft.Json;
 using Newtonsoft.Json.Serialization;
-using System.Net.Http;
 
 namespace RaceDayMVC.Services
 {
     public class ApiService
     {
-        public async Task<byte[]?> GetImageBytesAsync(string url)
-        {
-            if (string.IsNullOrEmpty(url)) return null;
-
-            var response = await _httpClient.GetAsync(url.TrimStart('/'));
-            if (!response.IsSuccessStatusCode) return null;
-
-            return await response.Content.ReadAsByteArrayAsync();
-        }
-
         private readonly HttpClient _httpClient;
         private readonly IHttpContextAccessor _httpContextAccessor;
 
@@ -37,7 +26,12 @@ namespace RaceDayMVC.Services
                 return default;
 
             var content = await response.Content.ReadAsStringAsync();
-            return JsonConvert.DeserializeObject<T>(content);
+            var settings = new JsonSerializerSettings
+            {
+                ContractResolver = new DefaultContractResolver(),
+                NullValueHandling = NullValueHandling.Ignore
+            };
+            return JsonConvert.DeserializeObject<T>(content, settings);
         }
 
         public async Task<HttpResponseMessage> PostAsync<T>(string endpoint, T data)
@@ -45,6 +39,7 @@ namespace RaceDayMVC.Services
             AddSessionCookieToRequest();
             var settings = new JsonSerializerSettings
             {
+                ContractResolver = new DefaultContractResolver(),
                 DateFormatHandling = DateFormatHandling.IsoDateFormat,
                 DateTimeZoneHandling = DateTimeZoneHandling.Utc
             };
@@ -54,15 +49,6 @@ namespace RaceDayMVC.Services
             return await _httpClient.PostAsync(endpoint, content);
         }
 
-        public async Task<HttpResponseMessage> EnrolInEventAsync(int eventId, int categoryId)
-        {
-            AddSessionCookieToRequest();
-            var payload = new { CategoryId = categoryId };
-            var json = JsonConvert.SerializeObject(payload);
-            var content = new StringContent(json, Encoding.UTF8, "application/json");
-
-            return await _httpClient.PostAsync($"api/events/{eventId}/enrol", content);
-        }
         public async Task<HttpResponseMessage> PutAsync<T>(string endpoint, T data)
         {
             AddSessionCookieToRequest();
@@ -83,27 +69,18 @@ namespace RaceDayMVC.Services
             AddSessionCookieToRequest();
             return await _httpClient.DeleteAsync(endpoint);
         }
+
         public async Task<HttpResponseMessage> PostFormDataAsync(string endpoint, MultipartFormDataContent formData)
         {
             AddSessionCookieToRequest();
             return await _httpClient.PostAsync(endpoint, formData);
         }
 
-        public async Task<HttpResponseMessage> PostFileAsync(string endpoint, MultipartFormDataContent content)
+        public async Task<byte[]?> GetImageBytesAsync(string url)
         {
-            AddSessionCookieToRequest();
-            return await _httpClient.PostAsync(endpoint, content);
-        }
-
-        public async Task<byte[]?> GetBytesAsync(string endpoint)
-        {
-            AddSessionCookieToRequest();
-            var cleanEndpoint = endpoint.TrimStart('/');
-            var response = await _httpClient.GetAsync(cleanEndpoint);
-
-            if (!response.IsSuccessStatusCode)
-                return null;
-
+            if (string.IsNullOrEmpty(url)) return null;
+            var response = await _httpClient.GetAsync(url.TrimStart('/'));
+            if (!response.IsSuccessStatusCode) return null;
             return await response.Content.ReadAsByteArrayAsync();
         }
 
@@ -127,4 +104,4 @@ namespace RaceDayMVC.Services
             }
         }
     }
-}"// API Service for MVC" 
+}

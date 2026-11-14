@@ -23,7 +23,6 @@ namespace RaceDayMVC.Controllers
             }
 
             var events = await _apiService.GetAsync<List<EventSummaryViewModel>>("api/events");
-
             return View(events ?? new List<EventSummaryViewModel>());
         }
 
@@ -209,7 +208,6 @@ namespace RaceDayMVC.Controllers
                 return RedirectToAction("Login", "Account");
 
             await _apiService.DeleteAsync($"api/events/{id}");
-
             return RedirectToAction("Dashboard");
         }
 
@@ -217,7 +215,7 @@ namespace RaceDayMVC.Controllers
         public async Task<IActionResult> GetEventImage(string path)
         {
             if (string.IsNullOrEmpty(path)) return NotFound();
-
+            
             var bytes = await _apiService.GetImageBytesAsync(path);
             if (bytes == null) return NotFound();
 
@@ -259,4 +257,4 @@ namespace RaceDayMVC.Controllers
             return View(model);
         }
     }
-}"// Organiser Controller for MVC" 
+}

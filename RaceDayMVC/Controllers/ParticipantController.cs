@@ -26,15 +26,15 @@ namespace RaceDayMVC.Controllers
             if (response.IsSuccessStatusCode)
             {
                 TempData["Success"] = "Successfully enrolled!";
+                return RedirectToAction("Index", "Home");
             }
-            else
-            {
-                var errorContent = await response.Content.ReadAsStringAsync();
-                TempData["Error"] = $"Failed to enrol: {errorContent}";
-            }
+
+            var errorContent = await response.Content.ReadAsStringAsync();
+            TempData["Error"] = $"Failed to enrol: {errorContent}";
 
             return RedirectToAction("Details", "Home", new { id = eventId });
         }
+        
         [HttpGet]
         public async Task<IActionResult> MyEnrolments()
         {
@@ -86,4 +86,4 @@ namespace RaceDayMVC.Controllers
             return View(model);
         }
     }
-}"// Participant Controller for MVC" 
+}
