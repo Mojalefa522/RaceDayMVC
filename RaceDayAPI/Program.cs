@@ -48,18 +48,25 @@ var app = builder.Build();
 if (!app.Environment.IsEnvironment("Testing"))
 {
     using (var scope = app.Services.CreateScope())
-    {
-        var db = scope.ServiceProvider.GetRequiredService<RaceDayDbContext>();
-        db.Database.Migrate();
+{
+    var db = scope.ServiceProvider.GetRequiredService<RaceDayDbContext>();
 
-        if (!db.Roles.Any())
-        {
-            db.Roles.AddRange(
-                new RaceDayAPI.Models.Role { RoleName = "Organiser", Description = "Can create and manage events" },
-                new RaceDayAPI.Models.Role { RoleName = "Participant", Description = "Can enrol in events and view results" }
-            );
-            db.SaveChanges();
-        }
+    if (!app.Environment.IsEnvironment("Testing"))
+    {
+        db.Database.Migrate();
+    }
+    else
+    {
+        db.Database.EnsureCreated();
+    }
+
+    if (!db.Roles.Any())
+    {
+        db.Roles.AddRange(
+            new RaceDayAPI.Models.Role { RoleName = "Organiser", Description = "Can create and manage events" },
+            new RaceDayAPI.Models.Role { RoleName = "Participant", Description = "Can enrol in events and view results" }
+        );
+        db.SaveChanges();
     }
 }
 

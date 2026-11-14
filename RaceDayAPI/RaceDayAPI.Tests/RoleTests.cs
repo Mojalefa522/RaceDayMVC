@@ -17,22 +17,21 @@ namespace RaceDayAPI.Tests
         }
 
         [Fact]
-        public async Task Unauthenticated_CreateEvent_Returns401()
-        {
-            var newEvent = new
-            {
-                name = "Test Event",
-                description = "Testing unauthenticated access",
-                location = "Test Location",
-                startDate = DateTime.Now.AddDays(1),
-                endDate = DateTime.Now.AddDays(2)
-            };
+public async Task Unauthenticated_CreateEvent_Returns401()
+{
+    var client = _factory.CreateClient();
 
-            var response = await _client.PostAsJsonAsync("/api/events", newEvent);
+    var formData = new MultipartFormDataContent();
+    formData.Add(new StringContent("Test Event"), "Name");
+    formData.Add(new StringContent("Test Description"), "Description");
+    formData.Add(new StringContent("Test Location"), "Location");
+    formData.Add(new StringContent("2027-01-01T10:00:00"), "StartDate");
+    formData.Add(new StringContent("2027-01-01T12:00:00"), "EndDate");
 
-            Assert.Equal(HttpStatusCode.Unauthorized, response.StatusCode);
-        }
+    var response = await client.PostAsync("/api/events", formData);
 
+    Assert.Equal(HttpStatusCode.Unauthorized, response.StatusCode);
+}
         [Fact]
         public async Task Participant_CreateEvent_Returns403()
         {

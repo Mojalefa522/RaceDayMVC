@@ -33,9 +33,19 @@ namespace RaceDayMVC.Controllers
 
             if (response.IsSuccessStatusCode)
             {
+                if (response.Headers.TryGetValues("Set-Cookie", out var cookieValues))
+                {
+                    var sessionCookie = cookieValues.FirstOrDefault(c => c.StartsWith(".AspNetCore.Session="));
+                    if (sessionCookie != null)
+                    {
+                        var cookieValue = sessionCookie.Split(';')[0].Replace(".AspNetCore.Session=", "");
+                        HttpContext.Session.SetString("ApiSessionCookie", cookieValue);
+                    }
+                }
+
                 var content = await response.Content.ReadAsStringAsync();
                 var user = JsonDocument.Parse(content).RootElement;
-                
+
                 string role = user.GetProperty("role").GetString();
                 string fullName = user.GetProperty("fullName").GetString();
 
@@ -71,7 +81,7 @@ namespace RaceDayMVC.Controllers
             }
 
             var error = await response.Content.ReadAsStringAsync();
-            ModelState.AddModelError("", "Registration failed. Email might be in use.");
+            ModelState.AddModelError("", $"API Error: {error}");
             return View(model);
         }
 
@@ -81,4 +91,4 @@ namespace RaceDayMVC.Controllers
             return RedirectToAction("Index", "Home");
         }
     }
-}
+}"// Account Controller for MVC" 
