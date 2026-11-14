@@ -17,6 +17,8 @@ Sign up to an event and choose a category.
 View a dashboard with their sign-ups.
 View their race history.
 
+## CI/CD Build
+![CI/CD Build Success](./docs/CI-CD.png)
 ## Setup & Run
 ### Pre-requisites:
 
