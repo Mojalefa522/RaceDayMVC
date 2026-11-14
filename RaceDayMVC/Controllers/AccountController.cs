@@ -91,4 +91,4 @@ namespace RaceDayMVC.Controllers
             return RedirectToAction("Index", "Home");
         }
     }
-}
+}"// Account Controller for MVC" 
