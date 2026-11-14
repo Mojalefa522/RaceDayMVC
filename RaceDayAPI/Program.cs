@@ -18,7 +18,7 @@ builder.Services.AddDbContext<RaceDayDbContext>(options =>
 });
 
 builder.Services.AddScoped<PasswordService>();
-
+builder.Services.AddScoped<BlobStorageService>();
 builder.Services.AddControllers();
 builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddSwaggerGen(c =>

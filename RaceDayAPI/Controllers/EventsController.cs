@@ -14,10 +14,12 @@ namespace RaceDayAPI.Controllers
     public class EventsController : ControllerBase
     {
         private readonly RaceDayDbContext _context;
+        private readonly BlobStorageService _blobStorageService;
 
-        public EventsController(RaceDayDbContext context)
+        public EventsController(RaceDayDbContext context, BlobStorageService blobStorageService)
         {
             _context = context;
+            _blobStorageService = blobStorageService;
         }
 
         [HttpGet]
@@ -83,6 +85,7 @@ namespace RaceDayAPI.Controllers
                 startDate = eventEntity.StartDate,
                 endDate = eventEntity.EndDate,
                 status = eventEntity.Status,
+                imageUrl = eventEntity.ImageUrl,
                 organiser = new
                 {
                     userId = eventEntity.Organiser.UserID,
@@ -112,18 +115,7 @@ namespace RaceDayAPI.Controllers
 
             if (imageFile != null && imageFile.Length > 0)
             {
-                var uploadsFolder = Path.Combine(Directory.GetCurrentDirectory(), "wwwroot", "uploads");
-                if (!Directory.Exists(uploadsFolder)) Directory.CreateDirectory(uploadsFolder);
-
-                var uniqueFileName = Guid.NewGuid().ToString() + Path.GetExtension(imageFile.FileName);
-                var filePath = Path.Combine(uploadsFolder, uniqueFileName);
-
-                using (var stream = new FileStream(filePath, FileMode.Create))
-                {
-                    await imageFile.CopyToAsync(stream);
-                }
-
-                imageUrl = $"/uploads/{uniqueFileName}";
+                imageUrl = await _blobStorageService.UploadFileAsync(imageFile);
             }
 
             var userId = HttpContext.Session.GetUserId().Value;

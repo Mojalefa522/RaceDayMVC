@@ -2,6 +2,8 @@ using RaceDayMVC.Services;
 
 var builder = WebApplication.CreateBuilder(args);
 
+builder.Services.AddScoped<BlobStorageService>();
+
 builder.Services.AddControllersWithViews();
 
 builder.Services.AddHttpClient<ApiService>(client =>
