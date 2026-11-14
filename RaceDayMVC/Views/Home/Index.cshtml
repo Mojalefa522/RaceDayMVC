@@ -1,0 +1,25 @@
+﻿@model List<RaceDayMVC.Models.EventListViewModel>
+@{
+    ViewData["Title"] = "Upcoming Events";
+}
+
+<h1 class="text-center mb-4">Upcoming Events</h1>
+
+<div class="row">
+    @foreach (var ev in Model)
+    {
+        <div class="col-md-4 mb-4">
+            <div class="card h-100 shadow-sm">
+                <div class="card-body">
+                    <h5 class="card-title">@ev.Name</h5>
+                    <h6 class="card-subtitle mb-2 text-muted">@ev.Location</h6>
+                    <p class="card-text">@ev.Description</p>
+                    <p class="text-primary fw-bold">@ev.StartDate.ToString("dd MMM yyyy")</p>
+                </div>
+                <div class="card-footer bg-white border-top-0">
+                    <a asp-action="Details" asp-route-id="@ev.EventId" class="btn btn-outline-primary w-100">View Details</a>
+                </div>
+            </div>
+        </div>
+    }
+</div>

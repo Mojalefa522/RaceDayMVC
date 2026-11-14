@@ -1,0 +1,54 @@
+﻿@model RaceDayMVC.Models.ResultEntryViewModel
+@{
+    ViewData["Title"] = "Event Results";
+}
+
+<div class="d-flex justify-content-between align-items-center mb-4 mt-3">
+    <h2>Event Results</h2>
+    <a asp-action="Dashboard" class="btn btn-outline-secondary">Back to Dashboard</a>
+</div>
+
+@if (!Model.Enrolments.Any())
+{
+    <div class="alert alert-info">No one has enrolled in this event yet.</div>
+}
+else
+{
+    <table class="table table-striped">
+        <thead class="table-dark">
+            <tr>
+                <th>Participant</th>
+                <th>Category</th>
+                <th>Bib</th>
+                <th>Finish Time</th>
+                <th>Position</th>
+                <th>Action</th>
+            </tr>
+        </thead>
+        <tbody>
+            @foreach (var item in Model.Enrolments)
+            {
+                <tr>
+                    <td>@item.ParticipantName</td>
+                    <td>@item.CategoryName</td>
+                    <td>@item.BibNumber</td>
+                    <td>
+                        <form asp-action="SubmitResult" method="post" class="d-flex">
+                            <input type="hidden" name="EventId" value="@Model.EventId" />
+                            <input type="hidden" name="EnrolmentId" value="@item.EnrolmentId" />
+                            
+                            <input type="text" name="FinishTime" class="form-control form-control-sm me-1" placeholder="HH:MM:SS" value="@item.FinishTime" required style="width: 120px;" />
+                            <input type="number" name="Position" class="form-control form-control-sm me-1" placeholder="Pos" value="@item.Position" required style="width: 80px;" />
+                            
+                            <button type="submit" class="btn btn-sm btn-primary">Save</button>
+                        </form>
+                    </td>
+                    <td>
+                        @if(item.Status == "completed") { <span class="badge bg-success">Completed</span> }
+                        else { <span class="badge bg-secondary">Not Entered</span> }
+                    </td>
+                </tr>
+            }
+        </tbody>
+    </table>
+}

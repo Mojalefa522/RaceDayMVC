@@ -1,0 +1,47 @@
+﻿@model List<RaceDayMVC.Models.MyEnrolmentViewModel>
+@{
+    ViewData["Title"] = "My Enrolments";
+}
+
+<h2 class="mt-4">My Enrolments</h2>
+
+@if (!Model.Any())
+{
+    <div class="alert alert-info mt-3">You haven't enrolled in any events yet.</div>
+}
+else
+{
+    <table class="table table-striped mt-3">
+        <thead class="table-dark">
+            <tr>
+                <th>Event</th>
+                <th>Category</th>
+                <th>Date Enrolled</th>
+                <th>Status</th>
+                <th>Bib Number</th>
+            </tr>
+        </thead>
+        <tbody>
+            @foreach (var item in Model)
+            {
+                <tr>
+                    <td>@item.EventName</td>
+                    <td>@item.CategoryName</td>
+                    <td>@item.EnrolmentDate.ToString("dd MMM yyyy")</td>
+                    <td>
+                        @if (item.Status == "approved")
+                        {
+                            <span class="badge bg-success">Approved</span>
+                        }
+                        else
+                        {
+
+                            <span class="badge bg-warning text-dark">@item.Status</span>
+                        }
+                    </td>
+                    <td>@item.BibNumber</td>
+                </tr>
+            }
+        </tbody>
+    </table>
+}

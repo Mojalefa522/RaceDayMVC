@@ -1,0 +1,76 @@
+﻿@model RaceDayMVC.Models.EventDetailViewModel
+@{
+    ViewData["Title"] = Model.Name;
+}
+
+<div class="row mt-4">
+    <div class="col-md-8">
+        <h1>@Model.Name</h1>
+        @if (!string.IsNullOrEmpty(Model.ImageUrl))
+        {
+            <img src="https://localhost:7270@Model.ImageUrl" class="img-fluid rounded mb-3" alt="Event Banner" style="max-height: 400px; width: 100%; object-fit: cover;" />
+        }
+        <p class="lead">@Model.Description</p>
+        <p><strong>Location:</strong> @Model.Location</p>
+        <p><strong>Date:</strong> @Model.StartDate.ToString("dd MMM yyyy HH:mm")</p>
+    </div>
+</div>
+
+<hr />
+
+<h3>Available Categories</h3>
+
+@if (Model.Categories == null || !Model.Categories.Any())
+{
+    <div class="alert alert-warning">No categories have been added to this event yet.</div>
+}
+else
+{
+    <table class="table table-bordered table-striped">
+        <thead class="table-dark">
+            <tr>
+                <th>Category</th>
+                <th>Distance</th>
+                <th>Age Limit</th>
+                <th>Capacity</th>
+                <th>Action</th>
+            </tr>
+        </thead>
+        <tbody>
+            @foreach (var cat in Model.Categories)
+            {
+                <tr>
+                    <td>@cat.Name</td>
+                    <td>@cat.Distance km</td>
+                    <td>@(cat.MinAge ?? 0) - @(cat.MaxAge ?? 99)</td>
+                    <td>@cat.CurrentEnrolments / @cat.MaxCapacity</td>
+                    <td>
+                        @if (Context.Session.GetString("Role") == "Participant")
+                        {
+                            if (cat.IsEnrolled)
+                            {
+                                <span class="badge bg-success">Enrolled</span>
+                            }
+                            else if (cat.CurrentEnrolments >= cat.MaxCapacity)
+                            {
+                                <span class="badge bg-danger">Full</span>
+                            }
+                            else
+                            {
+                                <form asp-controller="Participant" asp-action="Enrol" method="post">
+                                    <input type="hidden" name="eventId" value="@Model.EventId" />
+                                    <input type="hidden" name="categoryId" value="@cat.CategoryId" />
+                                    <button type="submit" class="btn btn-sm btn-success">Enrol</button>
+                                </form>
+                            }
+                        }
+                        else if (Context.Session.GetString("Role") == null)
+                        {
+                            <span class="text-muted">Login to Enrol</span>
+                        }
+                    </td>
+                </tr>
+            }
+        </tbody>
+    </table>
+}

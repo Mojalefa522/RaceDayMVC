@@ -1,0 +1,12 @@
+# Visual Studio cache/options
+.vs/
+.vscode/
+**/bin/
+**/obj/
+*.user
+*.suo
+
+# Database files
+*.db
+*.db-shm
+*.db-wal

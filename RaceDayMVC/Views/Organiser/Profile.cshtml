@@ -1,0 +1,29 @@
+﻿@model RaceDayMVC.Models.UpdateOrganiserProfileDto
+@{
+    ViewData["Title"] = "My Profile";
+}
+
+<div class="row justify-content-center mt-4">
+    <div class="col-md-6">
+        <h2>My Company Profile</h2>
+        @if (TempData["Success"] != null)
+        {
+            <div class="alert alert-success">@TempData["Success"]</div>
+        }
+        <form asp-action="Profile" method="post">
+            <div class="mb-3">
+                <label class="form-label">Company Name</label>
+                <input asp-for="CompanyName" class="form-control" />
+            </div>
+            <div class="mb-3">
+                <label class="form-label">Website</label>
+                <input asp-for="Website" class="form-control" />
+            </div>
+            <div class="mb-3">
+                <label class="form-label">Contact Phone</label>
+                <input asp-for="ContactPhone" class="form-control" />
+            </div>
+            <button type="submit" class="btn btn-primary w-100">Update Profile</button>
+        </form>
+    </div>
+</div>

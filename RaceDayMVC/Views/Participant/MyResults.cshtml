@@ -1,0 +1,47 @@
+﻿@model List<RaceDayMVC.Models.MyResultViewModel>
+@{
+    ViewData["Title"] = "My Results";
+}
+
+<h2 class="mt-4">My Race Results</h2>
+
+@if (!Model.Any())
+{
+    <div class="alert alert-info mt-3">You don't have any results yet.</div>
+}
+else
+{
+    <table class="table table-striped mt-3">
+        <thead class="table-dark">
+            <tr>
+                <th>Event</th>
+                <th>Category</th>
+                <th>Finish Time</th>
+                <th>Position</th>
+                <th>Status</th>
+            </tr>
+        </thead>
+        <tbody>
+            @foreach (var item in Model)
+            {
+                <tr>
+                    <td>@item.EventName</td>
+                    <td>@item.CategoryName</td>
+                    <td>@item.FinishTime</td>
+                    <td>@(item.Position.HasValue ? item.Position.ToString() : "-")</td>
+                    <td>
+                        @if (item.Status == "completed")
+                        {
+                            <span class="badge bg-success">Completed</span>
+                        }
+                        else
+                        {
+
+                            <span class="badge bg-secondary">@item.Status</span>
+                        }
+                    </td>
+                </tr>
+            }
+        </tbody>
+    </table>
+}
