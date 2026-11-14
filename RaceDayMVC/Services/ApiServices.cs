@@ -76,7 +76,7 @@ namespace RaceDayMVC.Services
             return await _httpClient.PostAsync(endpoint, formData);
         }
 
-        public async Task<byte[]?> GetImageBytesAsync(string url)
+        public async Task<byte[]?> GetBytesAsync(string url)
         {
             if (string.IsNullOrEmpty(url)) return null;
             var response = await _httpClient.GetAsync(url.TrimStart('/'));
