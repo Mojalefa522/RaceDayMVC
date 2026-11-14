@@ -6,7 +6,16 @@ using RaceDayAPI.Services;
 var builder = WebApplication.CreateBuilder(args);
 
 builder.Services.AddDbContext<RaceDayDbContext>(options =>
-    options.UseSqlite(builder.Configuration.GetConnectionString("DefaultConnection")));
+{
+    if (builder.Environment.IsEnvironment("Testing"))
+    {
+        options.UseInMemoryDatabase("TestDb");
+    }
+    else
+    {
+        options.UseSqlite(builder.Configuration.GetConnectionString("DefaultConnection"));
+    }
+});
 
 builder.Services.AddScoped<PasswordService>();
 
@@ -45,9 +54,7 @@ builder.Services.AddSession(options =>
 
 var app = builder.Build();
 
-if (!app.Environment.IsEnvironment("Testing"))
-{
-    using (var scope = app.Services.CreateScope())
+using (var scope = app.Services.CreateScope())
 {
     var db = scope.ServiceProvider.GetRequiredService<RaceDayDbContext>();
 
