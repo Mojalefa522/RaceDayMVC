@@ -216,7 +216,7 @@ namespace RaceDayMVC.Controllers
         {
             if (string.IsNullOrEmpty(path)) return NotFound();
             
-            var bytes = await _apiService.GetImageBytesAsync(path);
+                        var bytes = await _apiService.GetBytesAsync(path);
             if (bytes == null) return NotFound();
 
             var extension = Path.GetExtension(path).ToLower();
