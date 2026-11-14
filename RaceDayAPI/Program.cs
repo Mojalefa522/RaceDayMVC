@@ -45,18 +45,21 @@ builder.Services.AddSession(options =>
 
 var app = builder.Build();
 
-using (var scope = app.Services.CreateScope())
+if (!app.Environment.IsEnvironment("Testing"))
 {
-    var db = scope.ServiceProvider.GetRequiredService<RaceDayDbContext>();
-    db.Database.Migrate();
-
-    if (!db.Roles.Any())
+    using (var scope = app.Services.CreateScope())
     {
-        db.Roles.AddRange(
-            new RaceDayAPI.Models.Role { RoleName = "Organiser", Description = "Can create and manage events" },
-            new RaceDayAPI.Models.Role { RoleName = "Participant", Description = "Can enrol in events and view results" }
-        );
-        db.SaveChanges();
+        var db = scope.ServiceProvider.GetRequiredService<RaceDayDbContext>();
+        db.Database.Migrate();
+
+        if (!db.Roles.Any())
+        {
+            db.Roles.AddRange(
+                new RaceDayAPI.Models.Role { RoleName = "Organiser", Description = "Can create and manage events" },
+                new RaceDayAPI.Models.Role { RoleName = "Participant", Description = "Can enrol in events and view results" }
+            );
+            db.SaveChanges();
+        }
     }
 }
 

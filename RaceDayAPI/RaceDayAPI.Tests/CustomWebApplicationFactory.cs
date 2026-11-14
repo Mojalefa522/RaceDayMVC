@@ -1,9 +1,8 @@
 ﻿using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.Mvc.Testing;
-using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.DependencyInjection;
+using Microsoft.EntityFrameworkCore;
 using RaceDayAPI.Data;
-using RaceDayAPI.Models;
 using System.Linq;
 
 namespace RaceDayAPI.Tests
@@ -16,27 +15,18 @@ namespace RaceDayAPI.Tests
 
             builder.ConfigureServices(services =>
             {
-                var sp = services.BuildServiceProvider();
-                using (var scope = sp.CreateScope())
-                {
-                    var db = scope.ServiceProvider.GetRequiredService<RaceDayDbContext>();
-                    db.Database.EnsureCreated();
+                var descriptor = services.SingleOrDefault(
+                    d => d.ServiceType == typeof(DbContextOptions<RaceDayDbContext>));
 
-                    if (!db.Roles.Any())
-                    {
-                        db.Roles.Add(new Role
-                        {
-                            RoleName = "Organiser",
-                            Description = "Creates and manages events"
-                        });
-                        db.Roles.Add(new Role
-                        {
-                            RoleName = "Participant",
-                            Description = "Enrols in events and views results"
-                        });
-                        db.SaveChanges();
-                    }
+                if (descriptor != null)
+                {
+                    services.Remove(descriptor);
                 }
+
+                services.AddDbContext<RaceDayDbContext>(options =>
+                {
+                    options.UseInMemoryDatabase("TestDb_" + System.Guid.NewGuid().ToString());
+                });
             });
         }
     }
