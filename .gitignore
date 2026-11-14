@@ -9,4 +9,5 @@
 # Database files
 *.db
 *.db-shm
-*.db-wal
+*.db-wal"# Ignore SQLite database files" 
+"*.db" 
