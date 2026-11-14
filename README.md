@@ -2,3 +2,5 @@
 "This is the full-stack RaceDay solution." 
 "## Docker Setup" 
 "Run docker build -t racedaymvc ." 
+"## CI/CD" 
+"The GitHub Actions pipeline builds both the API and MVC projects." 
