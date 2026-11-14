@@ -1,40 +1,38 @@
-# RaceDay Platform - Full Stack Solution
+# RaceDay Platform - Full Stack
 
-## Project Overview
-RaceDay is a full-stack web application designed to manage sporting events (runs, walks, cycles). It consists of a RESTful API backend and an ASP.NET Core MVC frontend. The system allows users to register as either an Organiser or a Participant, manage events, enroll in categories, and track results.
+## Overview
+This web application will allow you to manage sporting events, such as marathons, sprints, runs, walks, cycles etc. This is split into two sections: a RESTful API backend and ASP.NET Core MVC frontend. The application allows users to register to be an organiser/participant. Users can create/manage events, sign up to categories, and view results.
 
-## User Roles
+## Roles:
 
-### 1. Organiser
-- Create, update, and delete events.
-- Add categories to events (e.g., 5km, 10km, Half Marathon).
-- View all participants enrolled in their specific events.
-- Capture and publish finish times and positions for participants after an event concludes.
+### Organiser
+Create, edit and delete events.
+Add categories to events (e.g. 5km, 10km, Half Marathon).
+View all participants who have signed up to their event(s).
+Record and publish completion times and positions for participants.
 
-### 2. Participant
-- Browse and view all upcoming events and available categories.
-- Enrol in an event by selecting a specific category.
-- View a personal dashboard of their enrolments and status.
-- View their personal race history and results across completed events.
+### Participant
+View all events and categories.
+Sign up to an event and choose a category.
+View a dashboard with their sign-ups.
+View their race history.
 
-## Setup and Run Instructions
+## Setup & Run
+### Pre-requisites:
 
-### Prerequisites
-- .NET 10.0 SDK
-- SQLite (integrated via Entity Framework Core)
+.NET 10.0 SDK
+SQLite (via Entity Framework Core)
 
-### Running Locally
-1. Clone the repository to your local machine.
-2. Open the solution file `RaceDayMVC.slnx` in Visual Studio.
-3. Ensure both `RaceDayAPI` and `RaceDayMVC` are set as **Startup Projects** (Right-click Solution -> Properties -> Multiple Startup Projects).
-4. The API will run on `https://localhost:7270` and the MVC app will run on `https://localhost:7003`.
-5. Press `F5` to launch both applications simultaneously. The database will automatically seed with default roles on the first run.
+### Local Setup
+Clone this repository.
 
+Open the solution file RaceDayMVC.slnx in Visual Studio.
+Ensure that both RaceDayAPI and RaceDayMVC are set as Startup Projects (Right click Solution > Properties > Multiple Startup Projects).
+The API will run on https://localhost:7270 and the MVC application will run on https://localhost:7003.
+Press F5 to run both applications. The database will automatically populate with default roles on first run.
 ## Docker Setup (MVC Application)
-
-The MVC application is containerized using Docker. Ensure Docker Desktop is running on your machine.
-
-1. Open a terminal in the `RaceDayMVC` folder.
-2. Build the Docker image:
-   ```bash
-   docker build -t racedaymvc .
+The MVC application has been set up with Docker. Ensure Docker Desktop is running.
+Open a terminal inside RaceDayMVC directory.
+Build the Docker image:
+```bash
+docker build -t racedaymvc .
